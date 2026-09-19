@@ -1,0 +1,797 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AdmitFlow · College Admission Registration</title>
+  <!-- Google Font & Font Awesome for clean icons -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Inter', sans-serif;
+    }
+
+    body {
+      background: linear-gradient(145deg, #eef2ff 0%, #e0e7ff 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem;
+    }
+
+    .glass-card {
+      background: rgba(255, 255, 255, 0.85);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border-radius: 2rem;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25), 0 0 0 1px rgba(255, 255, 255, 0.6);
+      width: 100%;
+      max-width: 800px;
+      padding: 2rem 2rem 2.2rem;
+      transition: all 0.3s ease;
+    }
+
+    h1 {
+      font-size: 2.2rem;
+      font-weight: 700;
+      color: #1e1b4b;
+      letter-spacing: -0.02em;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      margin-bottom: 0.2rem;
+    }
+
+    h1 i {
+      color: #4f46e5;
+      font-size: 2rem;
+      background: #eef2ff;
+      padding: 0.4rem;
+      border-radius: 1rem;
+    }
+
+    .subhead {
+      color: #4b5563;
+      font-weight: 500;
+      font-size: 0.98rem;
+      margin-bottom: 1.75rem;
+      border-left: 4px solid #818cf8;
+      padding-left: 1rem;
+      background: #f5f3ff;
+      border-radius: 0 12px 12px 0;
+      line-height: 1.4;
+      padding: 0.7rem 1rem;
+    }
+
+    .subhead i {
+      color: #4f46e5;
+      margin-right: 6px;
+    }
+
+    /* progress bar */
+    .progress-container {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 2rem;
+      position: relative;
+    }
+
+    .progress-container::before {
+      content: '';
+      position: absolute;
+      top: 16px;
+      left: 20px;
+      right: 20px;
+      height: 4px;
+      background: #e0e7ff;
+      border-radius: 4px;
+      z-index: 1;
+    }
+
+    .progress-step {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      z-index: 2;
+      width: 80px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: #6b7280;
+      letter-spacing: 0.01em;
+      cursor: default;
+    }
+
+    .step-circle {
+      width: 36px;
+      height: 36px;
+      background: white;
+      border: 2px solid #c7d2fe;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      color: #4f46e5;
+      margin-bottom: 0.4rem;
+      transition: all 0.2s ease;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.02);
+    }
+
+    .progress-step.active .step-circle {
+      background: #4f46e5;
+      border-color: #4f46e5;
+      color: white;
+      box-shadow: 0 8px 15px -6px #4f46e5;
+    }
+
+    .progress-step.completed .step-circle {
+      background: #e0e7ff;
+      border-color: #4f46e5;
+      color: #4f46e5;
+    }
+
+    .progress-step span {
+      white-space: nowrap;
+    }
+
+    /* form layout */
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.25rem 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .input-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+    }
+
+    .input-group.full-width {
+      grid-column: span 2;
+    }
+
+    label {
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: #1e1b4b;
+      text-transform: uppercase;
+      letter-spacing: 0.02em;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    label i {
+      color: #4f46e5;
+      font-size: 0.9rem;
+      width: 16px;
+    }
+
+    input, select, textarea {
+      width: 100%;
+      padding: 0.85rem 1rem;
+      border: 1.5px solid #d1d5db;
+      border-radius: 1rem;
+      background: white;
+      font-size: 0.95rem;
+      font-weight: 500;
+      color: #111827;
+      outline: none;
+      transition: all 0.2s;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+    }
+
+    input:focus, select:focus, textarea:focus {
+      border-color: #4f46e5;
+      box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.15);
+      background: #ffffff;
+    }
+
+    input::placeholder, textarea::placeholder {
+      color: #9ca3af;
+      font-weight: 400;
+    }
+
+    /* radio group for gender */
+    .radio-group {
+      display: flex;
+      gap: 1.5rem;
+      align-items: center;
+      background: #f9fafb;
+      padding: 0.5rem 1rem;
+      border-radius: 1rem;
+      border: 1.5px solid #e5e7eb;
+    }
+
+    .radio-option {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-weight: 500;
+      color: #1f2937;
+      font-size: 0.95rem;
+      cursor: pointer;
+    }
+
+    .radio-option input[type="radio"] {
+      appearance: none;
+      width: 18px;
+      height: 18px;
+      border: 2px solid #9ca3af;
+      border-radius: 50%;
+      margin: 0;
+      transition: 0.1s;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .radio-option input[type="radio"]:checked {
+      border-color: #4f46e5;
+      background: #4f46e5;
+      box-shadow: inset 0 0 0 4px white;
+    }
+
+    /* interest chips */
+    .interests-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.6rem;
+      margin-top: 0.25rem;
+    }
+
+    .interest-chip {
+      background: white;
+      border: 1.5px solid #d1d5db;
+      padding: 0.5rem 1rem;
+      border-radius: 2rem;
+      font-size: 0.85rem;
+      font-weight: 500;
+      color: #374151;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      user-select: none;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.02);
+    }
+
+    .interest-chip i {
+      color: #9ca3af;
+      font-size: 0.8rem;
+      transition: 0.1s;
+    }
+
+    .interest-chip.selected {
+      background: #eef2ff;
+      border-color: #4f46e5;
+      color: #3730a3;
+      box-shadow: 0 4px 8px -4px #a5b4fc;
+    }
+
+    .interest-chip.selected i {
+      color: #4f46e5;
+    }
+
+    .interest-chip:hover {
+      background: #f3f4f6;
+      border-color: #9ca3af;
+    }
+
+    /* action buttons */
+    .actions {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      margin-top: 1.5rem;
+      border-top: 1px solid #e5e7eb;
+      padding-top: 1.5rem;
+    }
+
+    .btn {
+      padding: 0.85rem 1.8rem;
+      border-radius: 3rem;
+      font-weight: 600;
+      font-size: 0.95rem;
+      border: none;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      box-shadow: 0 4px 10px rgba(0,0,0,0.02);
+      letter-spacing: 0.01em;
+    }
+
+    .btn-primary {
+      background: #4f46e5;
+      color: white;
+      box-shadow: 0 8px 20px -6px #4f46e5;
+      flex: 1;
+    }
+
+    .btn-primary:hover {
+      background: #4338ca;
+      transform: translateY(-2px);
+      box-shadow: 0 12px 24px -8px #4f46e5;
+    }
+
+    .btn-primary:active {
+      transform: translateY(0);
+      box-shadow: 0 4px 10px -4px #4f46e5;
+    }
+
+    .btn-secondary {
+      background: white;
+      color: #1e1b4b;
+      border: 1.5px solid #d1d5db;
+    }
+
+    .btn-secondary:hover {
+      background: #f9fafb;
+      border-color: #9ca3af;
+      transform: translateY(-1px);
+    }
+
+    .btn-secondary i {
+      color: #4f46e5;
+    }
+
+    /* message area */
+    .toast-message {
+      margin-top: 1.2rem;
+      padding: 0.9rem 1.2rem;
+      border-radius: 1rem;
+      background: #dcfce7;
+      color: #166534;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      border-left: 6px solid #22c55e;
+      font-size: 0.95rem;
+      opacity: 0;
+      transform: translateY(10px);
+      transition: opacity 0.3s, transform 0.3s;
+      pointer-events: none;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+    }
+
+    .toast-message.show {
+      opacity: 1;
+      transform: translateY(0);
+      pointer-events: auto;
+    }
+
+    .toast-message i {
+      font-size: 1.3rem;
+      color: #16a34a;
+    }
+
+    /* responsive */
+    @media (max-width: 600px) {
+      .glass-card {
+        padding: 1.5rem;
+      }
+      h1 {
+        font-size: 1.7rem;
+      }
+      .form-grid {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+      }
+      .input-group.full-width {
+        grid-column: span 1;
+      }
+      .progress-step span {
+        display: none;
+      }
+      .progress-step {
+        width: auto;
+      }
+      .progress-container::before {
+        left: 10px;
+        right: 10px;
+      }
+      .actions {
+        flex-direction: column-reverse;
+      }
+      .btn {
+        width: 100%;
+      }
+      .radio-group {
+        flex-wrap: wrap;
+        gap: 1rem;
+      }
+    }
+
+    /* custom scroll for chips if many */
+    .interests-container {
+      max-height: 90px;
+      overflow-y: auto;
+      padding: 2px 2px 6px 2px;
+    }
+    .interests-container::-webkit-scrollbar {
+      height: 4px;
+      width: 4px;
+    }
+    .interests-container::-webkit-scrollbar-thumb {
+      background: #c7d2fe;
+      border-radius: 20px;
+    }
+  </style>
+</head>
+<body>
+  <div class="glass-card">
+    <h1>
+      <i class="fas fa-graduation-cap"></i> AdmitFlow
+    </h1>
+    <div class="subhead">
+      <i class="fas fa-pen-fancy"></i> Start your college journey — fill the admission form below.
+    </div>
+
+    <!-- progress steps (visual only, but interactive feel) -->
+    <div class="progress-container">
+      <div class="progress-step active" id="step1Indicator">
+        <div class="step-circle">1</div>
+        <span>Personal</span>
+      </div>
+      <div class="progress-step" id="step2Indicator">
+        <div class="step-circle">2</div>
+        <span>Academic</span>
+      </div>
+      <div class="progress-step" id="step3Indicator">
+        <div class="step-circle">3</div>
+        <span>Interests</span>
+      </div>
+    </div>
+
+    <!-- registration form -->
+    <form id="admissionForm" novalidate>
+      <div class="form-grid">
+        <!-- full name -->
+        <div class="input-group full-width">
+          <label><i class="fas fa-user"></i> Full name</label>
+          <input type="text" id="fullName" placeholder="e.g. Aditya Sharma" autocomplete="name" required>
+        </div>
+
+        <!-- email -->
+        <div class="input-group">
+          <label><i class="fas fa-envelope"></i> Email</label>
+          <input type="email" id="email" placeholder="student@example.com" autocomplete="email" required>
+        </div>
+
+        <!-- phone -->
+        <div class="input-group">
+          <label><i class="fas fa-phone-alt"></i> Phone</label>
+          <input type="tel" id="phone" placeholder="+91 98765 43210" autocomplete="tel">
+        </div>
+
+        <!-- date of birth -->
+        <div class="input-group">
+          <label><i class="fas fa-calendar-alt"></i> Date of birth</label>
+          <input type="date" id="dob" value="2006-01-01">
+        </div>
+
+        <!-- gender radio group -->
+        <div class="input-group">
+          <label><i class="fas fa-venus-mars"></i> Gender</label>
+          <div class="radio-group">
+            <label class="radio-option">
+              <input type="radio" name="gender" value="female" checked> Female
+            </label>
+            <label class="radio-option">
+              <input type="radio" name="gender" value="male"> Male
+            </label>
+            <label class="radio-option">
+              <input type="radio" name="gender" value="other"> Other
+            </label>
+          </div>
+        </div>
+
+        <!-- high school (academic step 2 data) -->
+        <div class="input-group">
+          <label><i class="fas fa-school"></i> High school / 12th</label>
+          <input type="text" id="highSchool" placeholder="Delhi Public School" required>
+        </div>
+
+        <!-- GPA / percentage -->
+        <div class="input-group">
+          <label><i class="fas fa-chart-line"></i> GPA / Percentage</label>
+          <input type="text" id="gpa" placeholder="e.g. 92% or 3.8 GPA">
+        </div>
+
+        <!-- intended major -->
+        <div class="input-group">
+          <label><i class="fas fa-book-open"></i> Intended major</label>
+          <select id="major">
+            <option value="">Select a major</option>
+            <option value="Computer Science">Computer Science</option>
+            <option value="Engineering">Engineering</option>
+            <option value="Business">Business Administration</option>
+            <option value="Biology">Biology / Pre-Med</option>
+            <option value="Economics">Economics</option>
+            <option value="Psychology">Psychology</option>
+            <option value="Design">Design / Arts</option>
+          </select>
+        </div>
+
+        <!-- interests (chips) - full width -->
+        <div class="input-group full-width">
+          <label><i class="fas fa-heart"></i> Your interests (select all that apply)</label>
+          <div class="interests-container" id="interestsContainer">
+            <div class="interest-chip" data-interest="technology"><i class="fas fa-microchip"></i> Technology</div>
+            <div class="interest-chip" data-interest="sports"><i class="fas fa-futbol"></i> Sports</div>
+            <div class="interest-chip" data-interest="music"><i class="fas fa-music"></i> Music</div>
+            <div class="interest-chip" data-interest="art"><i class="fas fa-palette"></i> Art & Design</div>
+            <div class="interest-chip" data-interest="science"><i class="fas fa-flask"></i> Science</div>
+            <div class="interest-chip" data-interest="literature"><i class="fas fa-feather-alt"></i> Literature</div>
+            <div class="interest-chip" data-interest="volunteering"><i class="fas fa-hands-helping"></i> Volunteering</div>
+          </div>
+        </div>
+
+        <!-- short statement (full width) -->
+        <div class="input-group full-width">
+          <label><i class="fas fa-comment-dots"></i> Statement of purpose (optional)</label>
+          <textarea id="statement" rows="3" placeholder="Tell us why you want to join..."></textarea>
+        </div>
+      </div>
+
+      <!-- action buttons -->
+      <div class="actions">
+        <button type="button" class="btn btn-secondary" id="resetBtn">
+          <i class="fas fa-undo-alt"></i> Reset
+        </button>
+        <button type="submit" class="btn btn-primary" id="submitBtn">
+          <i class="fas fa-paper-plane"></i> Submit application
+        </button>
+      </div>
+    </form>
+
+    <!-- toast message -->
+    <div class="toast-message" id="toast">
+      <i class="fas fa-check-circle"></i>
+      <span id="toastText">Application submitted successfully! We'll contact you soon.</span>
+    </div>
+  </div>
+
+  <script>
+    (function() {
+      // --- get elements ---
+      const form = document.getElementById('admissionForm');
+      const fullName = document.getElementById('fullName');
+      const email = document.getElementById('email');
+      const phone = document.getElementById('phone');
+      const dob = document.getElementById('dob');
+      const highSchool = document.getElementById('highSchool');
+      const gpa = document.getElementById('gpa');
+      const major = document.getElementById('major');
+      const statement = document.getElementById('statement');
+      const interestChips = document.querySelectorAll('.interest-chip');
+      const resetBtn = document.getElementById('resetBtn');
+      const toast = document.getElementById('toast');
+      const toastText = document.getElementById('toastText');
+
+      // progress steps indicators (for visual feedback)
+      const step1 = document.getElementById('step1Indicator');
+      const step2 = document.getElementById('step2Indicator');
+      const step3 = document.getElementById('step3Indicator');
+
+      // --- helper to show toast ---
+      function showToast(message, isError = false) {
+        toastText.textContent = message;
+        toast.style.background = isError ? '#fee2e2' : '#dcfce7';
+        toast.style.color = isError ? '#991b1b' : '#166534';
+        toast.style.borderLeftColor = isError ? '#ef4444' : '#22c55e';
+        const icon = toast.querySelector('i');
+        icon.className = isError ? 'fas fa-exclamation-circle' : 'fas fa-check-circle';
+        icon.style.color = isError ? '#dc2626' : '#16a34a';
+        
+        toast.classList.add('show');
+        setTimeout(() => {
+          toast.classList.remove('show');
+        }, 4000);
+      }
+
+      // --- interest chip toggle ---
+      interestChips.forEach(chip => {
+        chip.addEventListener('click', () => {
+          chip.classList.toggle('selected');
+          // update progress indication (interests step gets active if any selected)
+          updateProgressBasedOnInput();
+        });
+      });
+
+      // --- update progress visual based on form completeness ---
+      function updateProgressBasedOnInput() {
+        // Step1: personal info (fullName, email, dob) non-empty
+        const personalFilled = fullName.value.trim() !== '' && email.value.trim() !== '' && dob.value !== '';
+        // Step2: academic (highSchool, major) non-empty, or gpa optional but highSchool required
+        const academicFilled = highSchool.value.trim() !== '' && major.value !== '';
+        // Step3: any interest selected
+        const anyInterestSelected = Array.from(interestChips).some(chip => chip.classList.contains('selected'));
+
+        // update class
+        step1.classList.toggle('completed', personalFilled);
+        step1.classList.toggle('active', !personalFilled && !academicFilled && !anyInterestSelected);
+        
+        // step2 completed if academic filled and personal filled? but visual: we set active if personal filled but academic not yet
+        if (personalFilled && !academicFilled) {
+          step2.classList.add('active');
+        } else {
+          step2.classList.remove('active');
+        }
+        step2.classList.toggle('completed', academicFilled && personalFilled);
+
+        // step3 active if personal+academic filled but no interest selected? or if any interest selected then completed
+        if (personalFilled && academicFilled && !anyInterestSelected) {
+          step3.classList.add('active');
+        } else {
+          step3.classList.remove('active');
+        }
+        step3.classList.toggle('completed', anyInterestSelected && personalFilled && academicFilled);
+
+        // if all three completed, step3 becomes completed and no active step (or keep step3 active but completed style)
+        if (personalFilled && academicFilled && anyInterestSelected) {
+          step3.classList.add('completed');
+          step3.classList.remove('active');
+          // step2 and step1 already completed via class toggles above
+        } else {
+          // in case not all completed, step3 completed only if interest selected AND personal+academic filled?
+          // we already set completed based on interest + prerequisite
+        }
+        // ensure step1 and step2 completed flags are consistent
+        step1.classList.toggle('completed', personalFilled);
+        if (personalFilled) step1.classList.remove('active');
+        if (academicFilled && personalFilled) {
+          step2.classList.add('completed');
+          step2.classList.remove('active');
+        } else {
+          step2.classList.toggle('completed', false);
+        }
+        // step3 completed condition final
+        if (personalFilled && academicFilled && anyInterestSelected) {
+          step3.classList.add('completed');
+        } else {
+          step3.classList.toggle('completed', false);
+        }
+      }
+
+      // listen to input changes for progress update
+      [fullName, email, dob, highSchool, major].forEach(el => {
+        el.addEventListener('input', updateProgressBasedOnInput);
+        el.addEventListener('change', updateProgressBasedOnInput);
+      });
+
+      // initialize progress
+      updateProgressBasedOnInput();
+
+      // --- form submission ---
+      form.addEventListener('submit', (e) => {
+        e.preventDefault();
+
+        // simple validation
+        if (!fullName.value.trim()) {
+          showToast('Please enter your full name.', true);
+          fullName.focus();
+          return;
+        }
+        if (!email.value.trim() || !email.value.includes('@')) {
+          showToast('Please enter a valid email address.', true);
+          email.focus();
+          return;
+        }
+        if (!highSchool.value.trim()) {
+          showToast('Please enter your high school / 12th institution.', true);
+          highSchool.focus();
+          return;
+        }
+        if (!major.value) {
+          showToast('Please select an intended major.', true);
+          major.focus();
+          return;
+        }
+
+        // gather data (simulated)
+        const selectedInterests = Array.from(interestChips)
+          .filter(chip => chip.classList.contains('selected'))
+          .map(chip => chip.dataset.interest);
+
+        const gender = document.querySelector('input[name="gender"]:checked')?.value || 'not specified';
+
+        // here you would typically send data to server; we just show success
+        console.log('Admission application:', {
+          fullName: fullName.value,
+          email: email.value,
+          phone: phone.value,
+          dob: dob.value,
+          gender: gender,
+          highSchool: highSchool.value,
+          gpa: gpa.value,
+          major: major.value,
+          interests: selectedInterests,
+          statement: statement.value
+        });
+
+        showToast(`🎉 Thanks ${fullName.value.split(' ')[0] || 'student'}! Your application was submitted.`, false);
+
+        // optional: reset form after submission? we can keep, but user may want to see data.
+        // but we can partially reset without clearing? better keep for demo.
+        // you could comment out reset below to keep data visible.
+        // however we don't reset to let them see their input, but we'll disable? no.
+        // just show toast and maybe mark as submitted.
+        // for better UX, we can just show toast and keep form as is.
+      });
+
+      // --- reset button ---
+      resetBtn.addEventListener('click', () => {
+        // reset form fields
+        form.reset();
+        // clear selected interests
+        interestChips.forEach(chip => chip.classList.remove('selected'));
+        // set default date (optional)
+        dob.value = '2006-01-01';
+        // set default radio (female) after reset (form.reset sets to checked default from HTML)
+        // ensure female checked after reset (since HTML has checked on female)
+        document.querySelector('input[name="gender"][value="female"]').checked = true;
+        // reset progress indicators
+        updateProgressBasedOnInput();
+        showToast('Form cleared. Start fresh!', false);
+        // focus on first field
+        fullName.focus();
+      });
+
+      // add extra interactivity: chip hover and click already covered.
+      // auto-update progress on interest chip click again (already in chip listener)
+      // also update progress when phone or other fields change (optional)
+      [phone, gpa, statement].forEach(el => {
+        el.addEventListener('input', () => {
+          // no progress change, but we may not need. keep it consistent.
+        });
+      });
+
+      // ensure progress updates when interest chip toggled, we call update there too.
+      // also when radio changes? not needed for progress, but fine.
+      // add listener for gender radio (not needed but nice)
+      
+      // minor: if user clicks on chip, update progress after toggle
+      // already in chip event listener, but let's ensure updateProgressBasedOnInput is called.
+      // we'll modify chip event listener to call updateProgressBasedOnInput.
+      // re-assign with additional call? We'll just attach an extra listener (or modify existing)
+      // easy: re-attach with additional function.
+      interestChips.forEach(chip => {
+        // remove previous? but we already have one, we can add another that calls update.
+        // safer: just add another listener that does update only.
+        chip.addEventListener('click', () => {
+          // slight delay to let class toggle happen
+          setTimeout(updateProgressBasedOnInput, 10);
+        });
+      });
+
+      // also when form.reset happens via reset button, we call updateProgress.
+      // done.
+
+      // update progress on page load (after setting initial)
+      // (already called)
+      // also fullName, etc. already have listeners.
+
+      // Add a small touch: pressing enter in any field doesn't accidentally submit? it's fine.
+    })();
+  </script>
+</body>
+</html>
